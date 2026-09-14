@@ -8,6 +8,8 @@ version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
     "torch",
+    "torchvision",
+    "onnx",
     "onnxruntime",
     "fastapi",
     "uvicorn[standard]",
@@ -22,3 +24,11 @@ dev = []
 
 [tool.setuptools]
 packages = []
+
+[tool.ruff]
+src = ["ml", "api", "ui"]
+
+[tool.pytest.ini_options]
+pythonpath = ["ml"]
+markers = ["slow: slow tests that train real models (opt-in via -m slow)"]
+addopts = "-m 'not slow'"
