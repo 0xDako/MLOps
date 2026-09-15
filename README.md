@@ -29,3 +29,29 @@ make export   # python ml/export.py
               # динамическая ось батча), проверяет паритет PyTorch/ONNX (atol=1e-5)
               # и пишет models/metrics.json (accuracy, размер файла, время инференса)
 ```
+
+## API
+
+FastAPI-сервис поверх ONNX-моделей из `models/` (PyTorch на сервере не нужен). Перед первым
+запуском нужны обученные и экспортированные модели (`make train && make export`).
+
+```bash
+make api   # uvicorn api.main:app --reload
+           # поднимает сервис на http://localhost:8000
+           # Swagger: http://localhost:8000/api/docs
+```
+
+Эндпоинты (все под `/api`, лимит файла — 10 МБ):
+
+| Метод и путь | Что делает |
+|---|---|
+| `GET /api/health` | статус сервиса и список загруженных моделей |
+| `GET /api/models` | метрики моделей из `metrics.json` (accuracy, размер, время инференса) |
+| `POST /api/predict/digit` | одна цифра (файл в теле, `?model=all\|logreg\|cnn_small\|cnn_robust`) → вероятности по классам |
+| `POST /api/predict/photo` | фото с цифрами → рамки, распознанная строка и номер телефона по каждой из трёх моделей |
+
+Пример запроса:
+
+```bash
+curl -F "file=@digit.png" "http://localhost:8000/api/predict/digit?model=all"
+```
