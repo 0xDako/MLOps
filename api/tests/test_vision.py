@@ -36,6 +36,25 @@ def test_format_phone(digits, expected):
     assert format_phone(digits) == expected
 
 
+def test_preprocess_centers_by_mass():
+    image = np.zeros((100, 100), dtype=np.uint8)
+    image[10:30, 10:30] = 255  # блок сильно смещён в угол
+
+    result = preprocess(image)[0]
+    ys, xs = np.where(result > 0.1)
+    assert 12 <= ys.mean() <= 16
+    assert 12 <= xs.mean() <= 16
+
+
+def test_preprocess_dilate_thickens_strokes():
+    image = np.zeros((40, 40), dtype=np.uint8)
+    image[:, 20] = 255  # тонкая линия в один пиксель
+
+    thin = preprocess(image, dilate=False)
+    thick = preprocess(image, dilate=True)
+    assert thick.sum() > thin.sum()
+
+
 def test_segment_finds_three_digits_left_to_right():
     image = np.full((100, 300, 3), 255, dtype=np.uint8)
     positions = [20, 120, 220]

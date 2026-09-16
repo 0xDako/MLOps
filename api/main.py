@@ -123,7 +123,7 @@ async def predict_photo(file: UploadFile = File(...)) -> PredictPhotoResponse:
     }
 
     for _, crop in crops:
-        array = preprocess(crop)
+        array = preprocess(crop, dilate=True)
         for name, probs in registry.predict_all(array).items():
             digit = int(np.argmax(probs))
             per_model[name]["digits"].append(digit)
