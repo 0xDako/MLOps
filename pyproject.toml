@@ -13,6 +13,7 @@ dependencies = [
     "onnxruntime",
     "fastapi",
     "uvicorn[standard]",
+    "python-multipart",
     "streamlit",
     "streamlit-drawable-canvas",
     "altair",

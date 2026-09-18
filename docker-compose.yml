@@ -1,0 +1,25 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - digitpad
+
+  ui:
+    build:
+      context: .
+      dockerfile: ui/Dockerfile
+    environment:
+      - API_URL=http://api:8000/api
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    networks:
+      - digitpad
+
+networks:
+  digitpad:

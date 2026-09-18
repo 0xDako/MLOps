@@ -1,0 +1,22 @@
+services:
+  api:
+    image: ghcr.io/0xdako/digitpad-api:${VERSION:-latest}
+    mem_limit: 512m
+    restart: unless-stopped
+    networks:
+      - proxy
+
+  ui:
+    image: ghcr.io/0xdako/digitpad-ui:${VERSION:-latest}
+    environment:
+      - API_URL=http://api:8000/api
+    mem_limit: 512m
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
