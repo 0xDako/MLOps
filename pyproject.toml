@@ -20,6 +20,7 @@ dependencies = [
     "pandas",
     "opencv-python-headless",
     "pytest",
+    "pytest-cov",
     "httpx",
     "ruff",
 ]
@@ -40,3 +41,6 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.File", "fastapi.Query"]
 pythonpath = ["ml", "."]
 markers = ["slow: slow tests that train real models (opt-in via -m slow)"]
 addopts = "-m 'not slow'"
+
+[tool.coverage.run]
+source = ["ml", "api", "ui"]

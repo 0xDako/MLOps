@@ -89,3 +89,15 @@ make down   # docker compose down
 в API-образ на этапе сборки.
 
 Прод (`docker-compose.prod.yml`) берёт готовые образы из GHCR вместо сборки из исходников.
+
+## CI
+
+На каждый push и PR запускаются три параллельные джобы (`.github/workflows/ci.yml`):
+
+| Джоба | Что делает |
+|---|---|
+| `lint` | `ruff check` + `ruff format --check` |
+| `test` | `pytest` с покрытием (`pytest-cov`), HTML-отчёт публикуется как артефакт сборки |
+| `smoke` | `train --subset --epochs 1 → export` (паритет PyTorch/ONNX проверяется внутри `export.py`) → `docker build` обоих образов |
+
+MNIST и pip-кэш переиспользуются между запусками.
